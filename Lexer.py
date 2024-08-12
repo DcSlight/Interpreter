@@ -1,14 +1,17 @@
 from Position import Position
 from Token import *
 from Error import *
-
+import string
 
 #######################################
 # CONSTANTS
 #######################################
 
 # TODO: move to the BNF
+
 DIGITS = '0123456789'
+LETTERS = string.ascii_letters
+LETTERS_DIGITS = LETTERS + DIGITS
 
 
 #######################################
@@ -27,11 +30,28 @@ class Lexer:
         self.pos.advance(self.current_char)
         self.current_char = self.text[self.pos.idx] if self.pos.idx < len(self.text) else None
 
+    def define_func_name(self):
+        name = ""
+        while self.current_char is not None and self.current_char != '$' and self.current_char in LETTERS:
+            name += self.current_char
+            self.advance()
+        if self.current_char == '$':
+            self.advance()
+        else:
+            pos_start = self.pos.copy()
+            if self.current_char:
+                char = self.current_char
+                return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
+            return [], InvalidSyntaxError(pos_start, self.pos)
+
     def make_tokens(self):
         tokens = []
 
         while self.current_char != None:
-            if self.current_char in ' \t':
+            if self.current_char == '$' and self.pos.idx == 0:
+                self.advance()
+                self.define_func_name()
+            elif self.current_char in ' \t':
                 self.advance()
             elif self.current_char in DIGITS:
                 tokens.append(self.make_number())
