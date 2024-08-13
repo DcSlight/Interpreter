@@ -36,8 +36,8 @@ class Lexer:
         flag = False
         pos_start = self.pos.copy()
         while self.current_char is not None and self.current_char != TT_FUNC and self.current_char in LETTERS:
-            name += self.current_char
-            self.advance()
+            name = self.read_word()
+            #self.advance()
         if self.current_char == TT_FUNC:  #last $ exist
             flag = True
             self.advance()
@@ -63,8 +63,8 @@ class Lexer:
             if self.current_char in ' \t':  # white space
                 self.advance()
             elif self.current_char in LETTERS:
-                arg_name += self.current_char
-                self.advance()
+                arg_name = self.read_word()
+                #self.advance()
             elif self.current_char == ",":
                 args.append(arg_name)
                 arg_name = ""
@@ -82,6 +82,15 @@ class Lexer:
                 return [], InvalidSyntaxError(pos_start, self.pos)
         self.advance()
         return Token(TT_FUNC_ARGS, args, pos_start, self.pos)
+
+    def read_word(self):
+        word = ""
+
+        while self.current_char != None and self.current_char in LETTERS:
+            word += self.current_char
+            self.advance()
+
+        return word
 
     def define_func_context(self):
         context = ""
@@ -107,6 +116,14 @@ class Lexer:
         self.advance()
         return Token(TT_FUNC_CONTEXT, context, pos_start, self.pos)
 
+    def call_func(self):
+        pos_start = self.pos.copy()
+        word = self.read_word()
+        print(word)
+
+
+
+
     def make_tokens(self):
         tokens = []
 
@@ -118,10 +135,12 @@ class Lexer:
                 tokens.append(self.define_func_context())
                 if type(tokens[2]) is tuple:
                     return tokens[2]
-                f = Function(tokens[0].value , tokens[1].value , tokens[2].value)
+                f = Function(tokens[0].value, tokens[1].value, tokens[2].value)
                 f.context_to_tokens()
             elif self.current_char in ' \t':
                 self.advance()
+            elif self.current_char in LETTERS:
+                self.call_func()
             elif self.current_char in DIGITS:
                 tokens.append(self.make_number())
             elif self.current_char == '+':

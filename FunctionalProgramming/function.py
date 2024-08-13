@@ -1,4 +1,5 @@
 import re
+from Token import KEYWORDS
 
 class Function:
     def __init__(self, name, args, context):
@@ -19,10 +20,7 @@ class Function:
 
     def is_keyword(self, token):
         # This checks for Python keywords and common operators
-        return token in [
-            "+", "-", "*", "/", "and", "or", "not", "if", "else",
-            "for", "while", "in", "return", "=", "==", "<", ">", "<=", ">=", "(", ")", ","
-        ]
+        return token in KEYWORDS
 
     def context_to_tokens(self):
         self.check_scope()

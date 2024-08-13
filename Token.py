@@ -11,13 +11,17 @@ TT_DIV = 'DIV'
 #######################################
 #FUNCTIONS TOKENS
 #######################################
-TT_FUNC='$'
+TT_FUNC = '$'
 TT_FUNC_NAME = 'FUNC_NAME'
 TT_FUNC_ARGS = 'FUNC_ARGS'
 TT_FUNC_CONTEXT = 'FUNC_CONTEXT'
 TT_LPAREN = 'LPAREN'
 TT_RPAREN = 'RPAREN'
 TT_EOF = 'EOF'
+
+KEYWORDS = [
+            "+", "-", "*", "/", "and", "or", "not", "%", "==", "<", ">", "<=", ">=", "(", ")", ","
+        ]
 
 
 class Token:
