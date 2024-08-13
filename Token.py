@@ -8,6 +8,13 @@ TT_PLUS = 'PLUS'
 TT_MINUS = 'MINUS'
 TT_MUL = 'MUL'
 TT_DIV = 'DIV'
+#######################################
+#FUNCTIONS TOKENS
+#######################################
+TT_FUNC='$'
+TT_FUNC_NAME = 'FUNC_NAME'
+TT_FUNC_ARGS = 'FUNC_ARGS'
+TT_FUNC_CONTEXT = 'FUNC_CONTEXT'
 TT_LPAREN = 'LPAREN'
 TT_RPAREN = 'RPAREN'
 TT_EOF = 'EOF'
@@ -29,4 +36,3 @@ class Token:
     def __repr__(self):
         if self.value: return f'{self.type}:{self.value}'
         return f'{self.type}'
-

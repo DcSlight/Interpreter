@@ -32,25 +32,90 @@ class Lexer:
 
     def define_func_name(self):
         name = ""
-        while self.current_char is not None and self.current_char != '$' and self.current_char in LETTERS:
+        flag = False
+        pos_start = self.pos.copy()
+        while self.current_char is not None and self.current_char != TT_FUNC and self.current_char in LETTERS:
             name += self.current_char
             self.advance()
-        if self.current_char == '$':
+        if self.current_char == TT_FUNC:  #last $ exist
+            flag = True
             self.advance()
         else:
             pos_start = self.pos.copy()
-            if self.current_char:
+            if self.current_char:  #check if character exist
                 char = self.current_char
                 return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
+            if not flag:  #missing $ at the end
+                return [], InvalidSyntaxError(pos_start, self.pos)
+        return Token(TT_FUNC_NAME, name, pos_start, self.pos)
+
+    def define_func_args(self):
+        args = []
+        pos_start = self.pos.copy()
+        arg_name = ""
+        if self.current_char in ' \t':  #white space
+            self.advance()
+        if self.current_char != "(":
             return [], InvalidSyntaxError(pos_start, self.pos)
+        self.advance()
+        while self.current_char and self.current_char != ")":
+            if self.current_char in ' \t':  # white space
+                self.advance()
+            elif self.current_char in LETTERS:
+                arg_name += self.current_char
+                self.advance()
+            elif self.current_char == ",":
+                args.append(arg_name)
+                arg_name = ""
+                self.advance()
+            else:
+                pos_start = self.pos.copy()
+                if self.current_char:
+                    return [], IllegalCharError(pos_start, self.pos, "'" + self.current_char + "'")
+                else:
+                    return [], InvalidSyntaxError(pos_start, self.pos)
+        if arg_name:
+            args.append(arg_name)
+        else:
+            if args:
+                return [], InvalidSyntaxError(pos_start, self.pos)
+        self.advance()
+        return Token(TT_FUNC_ARGS, args, pos_start, self.pos)
+
+    def define_func_context(self):
+        context = ""
+        pos_start = self.pos.copy()
+        if self.current_char in ' \t':  #white space
+            self.advance()
+        if self.current_char != "=":
+            return [], InvalidSyntaxError(pos_start, self.pos)
+        self.advance()
+        if self.current_char != ">":
+            return [], InvalidSyntaxError(pos_start, self.pos)
+        self.advance()
+        if self.current_char in ' \t':  # white space
+            self.advance()
+        if self.current_char != "{":
+            return [], InvalidSyntaxError(pos_start, self.pos)
+        self.advance()
+        while self.current_char and self.current_char != "}":
+            context += self.current_char
+            self.advance()
+        if self.current_char != "}":
+            return [], InvalidSyntaxError(pos_start, self.pos)
+        self.advance()
+        return Token(TT_FUNC_CONTEXT, context, pos_start, self.pos)
 
     def make_tokens(self):
         tokens = []
 
         while self.current_char != None:
-            if self.current_char == '$' and self.pos.idx == 0:
+            if self.current_char == TT_FUNC and self.pos.idx == 0:
                 self.advance()
-                self.define_func_name()
+                tokens.append(self.define_func_name())
+                tokens.append(self.define_func_args())
+                tokens.append(self.define_func_context())
+                print(tokens)
             elif self.current_char in ' \t':
                 self.advance()
             elif self.current_char in DIGITS:
