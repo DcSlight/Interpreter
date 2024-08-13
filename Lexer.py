@@ -1,6 +1,7 @@
 from Position import Position
 from Token import *
 from Error import *
+from FunctionalProgramming.function import Function
 import string
 
 #######################################
@@ -115,7 +116,10 @@ class Lexer:
                 tokens.append(self.define_func_name())
                 tokens.append(self.define_func_args())
                 tokens.append(self.define_func_context())
-                print(tokens)
+                if type(tokens[2]) is tuple:
+                    return tokens[2]
+                f = Function(tokens[0].value , tokens[1].value , tokens[2].value)
+                f.context_to_tokens()
             elif self.current_char in ' \t':
                 self.advance()
             elif self.current_char in DIGITS:
