@@ -31,118 +31,140 @@ class Lexer:
         self.pos.advance(self.current_char)
         self.current_char = self.text[self.pos.idx] if self.pos.idx < len(self.text) else None
 
-    def define_func_name(self):
-        name = ""
-        flag = False
-        pos_start = self.pos.copy()
-        while self.current_char is not None and self.current_char != TT_FUNC and self.current_char in LETTERS:
-            name = self.read_word()
-            #self.advance()
-        if self.current_char == TT_FUNC:  #last $ exist
-            flag = True
-            self.advance()
-        else:
-            pos_start = self.pos.copy()
-            if self.current_char:  #check if character exist
-                char = self.current_char
-                return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
-            if not flag:  #missing $ at the end
-                return [], InvalidSyntaxError(pos_start, self.pos)
-        return Token(TT_FUNC_NAME, name, pos_start, self.pos)
 
-    def define_func_args(self):
-        args = []
-        pos_start = self.pos.copy()
-        arg_name = ""
-        if self.current_char in ' \t':  #white space
-            self.advance()
-        if self.current_char != "(":
-            return [], InvalidSyntaxError(pos_start, self.pos)
-        self.advance()
-        while self.current_char and self.current_char != ")":
-            if self.current_char in ' \t':  # white space
-                self.advance()
-            elif self.current_char in LETTERS:
-                arg_name = self.read_word()
-                #self.advance()
-            elif self.current_char == ",":
-                args.append(arg_name)
-                arg_name = ""
-                self.advance()
-            else:
-                pos_start = self.pos.copy()
-                if self.current_char:
-                    return [], IllegalCharError(pos_start, self.pos, "'" + self.current_char + "'")
-                else:
-                    return [], InvalidSyntaxError(pos_start, self.pos)
-        if arg_name:
-            args.append(arg_name)
-        else:
-            if args:
-                return [], InvalidSyntaxError(pos_start, self.pos)
-        self.advance()
-        return Token(TT_FUNC_ARGS, args, pos_start, self.pos)
+    # def define_func_name(self):
+    #     name = ""
+    #     flag = False
+    #     pos_start = self.pos.copy()
+    #     while self.current_char != None and self.current_char != TT_FUNC and self.current_char in LETTERS:
+    #         name = self.make_word()
+    #     if self.current_char == TT_FUNC:  # last $ exist
+    #         flag = True
+    #         self.advance()
+    #     else:
+    #         pos_start = self.pos.copy()
+    #         if self.current_char:  # check if character exist
+    #             char = self.current_char
+    #             return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
+    #         if not flag:  # missing $ at the end
+    #             return [], InvalidSyntaxError(pos_start, self.pos)
+    #     return Token(TT_FUNC_NAME, name, pos_start, self.pos)
+    #
+    # def define_func_args(self):
+    #     args = []
+    #     pos_start = self.pos.copy()
+    #     arg_name = ""
+    #     if self.current_char in ' \t':  # white space
+    #         self.advance()
+    #     if self.current_char != "(":
+    #         return [], InvalidSyntaxError(pos_start, self.pos)
+    #     self.advance()
+    #     while self.current_char and self.current_char != ")":
+    #         if self.current_char in ' \t':  # white space
+    #             self.advance()
+    #         elif self.current_char in LETTERS:
+    #             arg_name = self.make_word()
+    #             # self.advance()
+    #         elif self.current_char == ",":
+    #             args.append(arg_name)
+    #             arg_name = ""
+    #             self.advance()
+    #         else:
+    #             pos_start = self.pos.copy()
+    #             if self.current_char:
+    #                 return [], IllegalCharError(pos_start, self.pos, "'" + self.current_char + "'")
+    #             else:
+    #                 return [], InvalidSyntaxError(pos_start, self.pos)
+    #     if arg_name:
+    #         args.append(arg_name)
+    #     else:
+    #         if args:
+    #             return [], InvalidSyntaxError(pos_start, self.pos)
+    #     self.advance()
+    #     return [Token(TT_LPAREN, pos_start=self.pos), Token(TT_FUNC_ARGS, args, pos_start, self.pos),
+    #             Token(TT_RPAREN, pos_start=self.pos)]
 
-    def read_word(self):
+
+    def make_string(self):
         word = ""
+        pos_start = self.pos.copy()
 
         while self.current_char != None and self.current_char in LETTERS:
             word += self.current_char
             self.advance()
 
-        return word
+        return Token(TT_STRING, word, pos_start=pos_start)
 
-    def define_func_context(self):
-        context = ""
+
+    # def define_func_context(self):
+    #     context = ""
+    #     pos_start = self.pos.copy()
+    #     if self.current_char in ' \t':  # white space
+    #         self.advance()
+    #     if self.current_char != "=":
+    #         return [], InvalidSyntaxError(pos_start, self.pos)
+    #     self.advance()
+    #     if self.current_char != ">":
+    #         return [], InvalidSyntaxError(pos_start, self.pos)
+    #     self.advance()
+    #     if self.current_char in ' \t':  # white space
+    #         self.advance()
+    #     if self.current_char != "{":
+    #         return [], InvalidSyntaxError(pos_start, self.pos)
+    #     self.advance()
+    #     while self.current_char and self.current_char != "}":
+    #         context += self.current_char
+    #         self.advance()
+    #     if self.current_char != "}":
+    #         return [], InvalidSyntaxError(pos_start, self.pos)
+    #     self.advance()
+    #     return [Token(TT_FUNC_SIGN, pos_start=self.pos), Token(TT_FUNC_LBRACKET, pos_start=self.pos),
+    #             Token(TT_FUNC_CONTEXT, context, pos_start, self.pos), Token(TT_FUNC_RBRACKET, pos_start=self.pos)]
+    #
+    # def call_func(self):
+    #     pos_start = self.pos.copy()
+    #     word = self.make_word()
+    #     print(word)
+
+
+    def make_equals(self):
+        tok_type = TT_EQ
         pos_start = self.pos.copy()
-        if self.current_char in ' \t':  #white space
+        self.advance()
+
+        if self.current_char == "=":
             self.advance()
-        if self.current_char != "=":
-            return [], InvalidSyntaxError(pos_start, self.pos)
-        self.advance()
-        if self.current_char != ">":
-            return [], InvalidSyntaxError(pos_start, self.pos)
-        self.advance()
-        if self.current_char in ' \t':  # white space
+            tok_type = TT_EE
+        elif self.current_char == ">":
             self.advance()
-        if self.current_char != "{":
-            return [], InvalidSyntaxError(pos_start, self.pos)
-        self.advance()
-        while self.current_char and self.current_char != "}":
-            context += self.current_char
-            self.advance()
-        if self.current_char != "}":
-            return [], InvalidSyntaxError(pos_start, self.pos)
-        self.advance()
-        return Token(TT_FUNC_CONTEXT, context, pos_start, self.pos)
+            tok_type = TT_FUNC_SIGN
 
-    def call_func(self):
-        pos_start = self.pos.copy()
-        word = self.read_word()
-        print(word)
-
-
-
+        return Token(tok_type, pos_start=self.pos)
 
     def make_tokens(self):
         tokens = []
 
         while self.current_char != None:
-            if self.current_char == TT_FUNC and self.pos.idx == 0:
+            if self.current_char == TT_FUNC:
+                tokens.append(Token(TT_FUNC, pos_start=self.pos))
                 self.advance()
-                tokens.append(self.define_func_name())
-                tokens.append(self.define_func_args())
-                tokens.append(self.define_func_context())
-                if type(tokens[2]) is tuple:
-                    return tokens[2]
-                f = Function(tokens[0].value, tokens[1].value, tokens[2].value)
-                f.context_to_tokens()
+                # tokens.append(self.define_func_name())
+                # tokens.append(Token(TT_FUNC, pos_start=self.pos))
+                # tokens.extend(self.define_func_args())
+                # tokens.extend(self.define_func_context())
+                # if type(tokens[2]) is tuple:
+                #     return tokens[2]
+                # print(tokens)
+                # f = Function(tokens)s
+                # f.context_to_tokens()
             elif self.current_char in ' \t':
                 self.advance()
             elif self.current_char in LETTERS:
-                self.call_func()
+                tokens.append(self.make_string())
             elif self.current_char in DIGITS:
                 tokens.append(self.make_number())
+            elif self.current_char == '=':
+                tokens.append(self.make_equals())
             elif self.current_char == '+':
                 tokens.append(Token(TT_PLUS, pos_start=self.pos))
                 self.advance()
@@ -161,12 +183,21 @@ class Lexer:
             elif self.current_char == ')':
                 tokens.append(Token(TT_RPAREN, pos_start=self.pos))
                 self.advance()
+            elif self.current_char == ',':
+                tokens.append(Token(TT_COMMA, pos_start=self.pos))
+                self.advance()
+            elif self.current_char == '{':
+                tokens.append(Token(TT_FUNC_LBRACKET, pos_start=self.pos))
+                self.advance()
+            elif self.current_char == '}':
+                tokens.append(Token(TT_FUNC_RBRACKET, pos_start=self.pos))
+                self.advance()
             else:
                 pos_start = self.pos.copy()
                 char = self.current_char
                 self.advance()
                 return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
-
+        print(tokens)
         tokens.append(Token(TT_EOF, pos_start=self.pos))
         return tokens, None
 
@@ -177,7 +208,8 @@ class Lexer:
 
         while self.current_char != None and self.current_char in DIGITS + '.':
             if self.current_char == '.':
-                if dot_count == 1: break
+                if dot_count == 1:
+                    break
                 dot_count += 1
                 num_str += '.'
             else:

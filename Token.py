@@ -14,14 +14,24 @@ TT_DIV = 'DIV'
 TT_FUNC = '$'
 TT_FUNC_NAME = 'FUNC_NAME'
 TT_FUNC_ARGS = 'FUNC_ARGS'
+TT_FUNC_SIGN = '=>'
 TT_FUNC_CONTEXT = 'FUNC_CONTEXT'
+TT_FUNC_LBRACKET = '{'
+TT_FUNC_RBRACKET = '}'
 TT_LPAREN = 'LPAREN'
 TT_RPAREN = 'RPAREN'
+TT_EQ = 'EQ'
+TT_EE = 'EE'
+TT_AND = '&&'
+TT_STRING = 'STRING'
+TT_COMMA = 'COMMA'
+
+
 TT_EOF = 'EOF'
 
 KEYWORDS = [
-            "+", "-", "*", "/", "and", "or", "not", "%", "==", "<", ">", "<=", ">=", "(", ")", ","
-        ]
+    "+", "-", "*", "/", "and", "or", "not", "%", "==", "<", ">", "<=", ">=", "(", ")", ","
+]
 
 
 class Token:
@@ -37,6 +47,31 @@ class Token:
         if pos_end:
             self.pos_end = pos_end
 
+    def matches(self, type_, value=None):
+        return self.type == type_ and self.value == value
+
     def __repr__(self):
         if self.value: return f'{self.type}:{self.value}'
         return f'{self.type}'
+
+
+#######################################
+# SYMBOL TABLE
+#######################################
+
+class SymbolTable:
+    def __init__(self, parent=None):
+        self.symbols = {}
+        self.parent = parent
+
+    def get(self, name):
+        value = self.symbols.get(name, None)
+        if not value and self.parent:
+            return self.parent.get(name)
+        return value
+
+    def set(self, name, value):
+        self.symbols[name] = value
+
+    def remove(self, name):
+        del self.symbols[name]

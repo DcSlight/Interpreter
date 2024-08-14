@@ -1,6 +1,7 @@
 from Token import *
 from Error import *
 
+
 #######################################
 # RUNTIME RESULT
 #######################################
@@ -78,6 +79,7 @@ class Context:
         self.display_name = display_name
         self.parent = parent
         self.parent_entry_pos = parent_entry_pos
+        self.symbol_table = None
 
 
 #######################################
@@ -135,3 +137,49 @@ class Interpreter:
             return res.failure(error)
         else:
             return res.success(number.set_pos(node.pos_start, node.pos_end))
+
+    def visit_FuncDefNode(self, node, context):
+        res = RTResult()
+
+        func_name = node.var_name_tok.value if node.var_name_tok else None
+        body_node = node.body_node
+        arg_names = [arg_name.value for arg_name in node.arg_name_toks]
+        from FunctionalProgramming.function import Function
+        func_value = Function(func_name, arg_names, body_node).set_context(context).set_pos(node.pos_start,
+                                                                                            node.pos_end)
+
+        if node.var_name_tok:
+            context.symbol_table.set(func_name, func_value)
+
+        return res.success(func_value)
+
+    def visit_CallFuncNode(self, node, context):
+        res = RTResult()
+        args = []
+
+        value_to_call = res.register(self.visit(node.node_to_call, context))
+        if res.error: return res
+        value_to_call = value_to_call.copy().set_pos(node.pos_start, node.pos_end)
+
+        for arg_node in node.arg_nodes:
+            args.append(res.register(self.visit(arg_node, context)))
+            if res.error: return res
+
+        return_value = res.register(value_to_call.execute(args))
+        if res.error: return res
+        return res.success(return_value)
+
+    def visit_StringNode(self, node, context):
+        res = RTResult()
+        var_name = node.tok
+        value = context.symbol_table.get(var_name)
+
+        if not value:
+            return res.failure(RTError(
+                node.pos_start, node.pos_end,
+                f"'{var_name}' is not defined",
+                context
+            ))
+
+        #value = value.copy().set_pos(node.pos_start, node.pos_end)
+        return res.success(value)
