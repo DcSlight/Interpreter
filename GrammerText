@@ -14,4 +14,4 @@
 <name> ::= [a-z]+ | [A-Z]+
 <args> ::= "(" <arg> ")"
 <arg> ::= [a-z]+ | [A-Z]+ | [a-z]+ "," <arg> | [A-Z]+ "," <arg>
-<func_context> ::= "{" [a-z]+ "}" | "{" [A-Z]+ "}"
+<func_context> ::= [a-z]+ | [A-Z]+

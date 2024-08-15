@@ -13,7 +13,7 @@ if len(sys.argv) == 2:
 
         for line in text_file:
             text = line
-            result, error = basic.run('<stdin>', text)
+            result, error = basic.run(file, text)
 
             if error:
                 print(error.as_string())

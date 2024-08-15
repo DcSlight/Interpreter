@@ -200,7 +200,7 @@ class Lexer:
                 char = self.current_char
                 self.advance()
                 return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
-
+        print(tokens)
         tokens.append(Token(TT_EOF, pos_start=self.pos))
         return tokens, None
 
