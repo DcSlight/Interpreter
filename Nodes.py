@@ -48,6 +48,47 @@ class StringNode:
         return f'{self.tok}'
 
 
+class BoolNode:
+    def __init__(self, tok):
+        self.tok = tok.value
+        self.pos_start = tok.pos_start
+        self.pos_end = tok.pos_end
+
+    def __repr__(self):
+        return f'{self.tok}'
+
+
+class ExitNode:
+    def __init__(self, tok):
+        self.tok = tok.type
+        self.pos_start = tok.pos_start
+        self.pos_end = tok.pos_end
+
+    def __repr__(self):
+        return f'{self.tok}'
+
+
+class CommentNode:
+    def __init__(self, tok):
+        self.tok = tok.value
+        self.pos_start = tok.pos_start
+        self.pos_end = tok.pos_end
+
+    def __repr__(self):
+        return f'{self.tok}'
+
+class PrintedNoteNode:
+    BRIGHT_BLUE = '\033[94m'
+    RESET = '\033[0m'
+
+    def __init__(self, tok):
+        self.tok = self.BRIGHT_BLUE + tok.value + self.RESET
+        self.pos_start = tok.pos_start
+        self.pos_end = tok.pos_end
+
+    def __repr__(self):
+        return f'{self.tok}'
+
 class FuncDefNode:
     def __init__(self, var_name_tok, arg_name_toks, body_node):
         self.var_name_tok = var_name_tok
@@ -75,7 +116,6 @@ class CallFuncNode:
             self.pos_end = self.arg_nodes[len(self.arg_nodes) - 1].pos_end
         else:
             self.pos_end = self.node_to_call.pos_end
-
 
 # class FuncVarNode:
 #     def __init__(self, var_name_tok):

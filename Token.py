@@ -8,30 +8,45 @@ TT_PLUS = 'PLUS'
 TT_MINUS = 'MINUS'
 TT_MUL = 'MUL'
 TT_DIV = 'DIV'
+TT_MODULO = 'MODULO'
+
+TT_EQ = 'EQ'
+TT_EE = 'EE'
+TT_NE = 'NE'
+TT_LT = 'LT'
+TT_GT = 'GT'
+TT_LTE = 'LTE'
+TT_GTE = 'GTE'
+
 #######################################
-#FUNCTIONS TOKENS
+# FUNCTIONS TOKENS
 #######################################
 TT_FUNC = '$'
 TT_FUNC_NAME = 'FUNC_NAME'
 TT_FUNC_ARGS = 'FUNC_ARGS'
 TT_FUNC_SIGN = '=>'
 TT_FUNC_CONTEXT = 'FUNC_CONTEXT'
+TT_CALL_FUNC = '@'
 TT_FUNC_LBRACKET = '{'
 TT_FUNC_RBRACKET = '}'
 TT_LPAREN = 'LPAREN'
 TT_RPAREN = 'RPAREN'
-TT_EQ = 'EQ'
-TT_EE = 'EE'
 TT_AND = '&&'
+TT_OR = '||'
 TT_STRING = 'STRING'
+TT_BOOL = 'BOOL'
 TT_COMMA = 'COMMA'
-
-
+TT_NOT = '!'
+TT_COMMENT = '#'
+TT_PRINTED_NOTE = '##'
 TT_EOF = 'EOF'
+TT_EXIT = 'EXIT'
 
 KEYWORDS = [
     "+", "-", "*", "/", "and", "or", "not", "%", "==", "<", ">", "<=", ">=", "(", ")", ","
 ]
+
+BOOLEANS = ["True", "False"]
 
 
 class Token:
