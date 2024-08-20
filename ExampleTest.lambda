@@ -1,0 +1,42 @@
+$sapir$ () => $a$ (x) => 1+x
+@sapir{}{2}
+
+$a$ (x) => 1+x
+$b$ (y) => @a{y}
+@b{5}
+
+$c$ (z,y) => z * @b{y}
+@c{3,4}
+
+$sumDigits$ (number) => (number==0) || (number%10 + @sumDigits{number/10})
+(@sumDigits{12345}) - 1
+
+## Factorial Function - @factorial{5}
+$factorial$ (n) => (n==0) || (n*@factorial{n-1})
+@factorial{5}
+## Fibonacci Function - @fib{8}
+$fib$ (n) => n == 1 || n == 2 || @fib{n - 1} + @fib{n - 2}
+@fib{8}
+##----------------------
+## Lambda example
+##----------------------
+##[x:x+2](3) =
+[x:x+2](3)
+##[x,y:x*5+y-2](10,12) =
+[x,y:x*5+y-2](10,12)
+##[x:[y: y+4](2)](3) =
+[x:[y: y+4](2)](3)
+##[x:[y: y+x](2)](3) =
+[x:[y: y+x](2)](3)
+##[x:x * [y: y+4](2)](3) =
+[x:x * [y: y+4](2)](3)
+##[x:x * ([y: y+4](2))](3) =
+[x:x * ([y: y+4](2))](3)
+##[x:([y: y+4](2)) * x](3) =
+[x:([y: y+4](2)) * x](3)
+##[x:[y: y+4](2) * x](3)
+[x:[y: y+4](2) * x](3)
+##----------------------
+$factorial$ (n) => n+n
+@factorial{5}
+5*(3-1)

@@ -189,6 +189,15 @@ class Lexer:
             elif self.current_char == '}':
                 tokens.append(Token(TT_FUNC_RBRACKET, pos_start=self.pos))
                 self.advance()
+            elif self.current_char == '[':
+                tokens.append(Token(TT_LLAMBDA, pos_start=self.pos))
+                self.advance()
+            elif self.current_char == ']':
+                tokens.append(Token(TT_RLAMBDA, pos_start=self.pos))
+                self.advance()
+            elif self.current_char == ':':
+                tokens.append(Token(TT_LAMBDA_SIGN, pos_start=self.pos))
+                self.advance()
             elif self.current_char == '&':
                 tokens.append(self.make_and())
             elif self.current_char == '|':
@@ -200,7 +209,7 @@ class Lexer:
                 char = self.current_char
                 self.advance()
                 return [], IllegalCharError(pos_start, self.pos, "'" + char + "'")
-        print(tokens)
+
         tokens.append(Token(TT_EOF, pos_start=self.pos))
         return tokens, None
 

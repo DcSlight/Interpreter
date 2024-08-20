@@ -97,6 +97,12 @@ class Parser:
             self.advance()
             return res.success(exit_node)
 
+        # Check for lambda
+        if self.current_tok.matches(TT_LLAMBDA):
+            lambda_func = res.register(self.lambda_func())
+            if res.error: return res
+            return res.success(lambda_func)
+
 
         return self.bin_op(self.comp_expression, (TT_AND, TT_OR))
 
@@ -114,6 +120,103 @@ class Parser:
 
 
         return self.bin_op(self.second_expression, (TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE))
+
+    def lambda_func(self):
+        res = ParseResult()
+        res.register_advancement()
+        self.advance()
+        arg_name_toks = []
+
+        # Lambda has no arguments
+        if self.current_tok.matches(TT_LAMBDA_SIGN):
+            return res.failure(InvalidSyntaxError(
+                self.current_tok.pos_start, self.current_tok.pos_end,
+                f"Expected arg name"
+            ))
+
+        # Check if lambda has arguments
+        if self.current_tok.matches(TT_STRING, self.current_tok.value):
+            arg_name_toks.append(self.current_tok)
+            res.register_advancement()
+            self.advance()
+
+            # Check if function has more arguments
+            while self.current_tok.matches(TT_COMMA):
+                res.register_advancement()
+                self.advance()
+
+                if not self.current_tok.matches(TT_STRING, self.current_tok.value):
+                    return res.failure(InvalidSyntaxError(
+                        self.current_tok.pos_start, self.current_tok.pos_end,
+                        f"Expected arg name"
+                    ))
+                arg_name_toks.append(self.current_tok)
+                res.register_advancement()
+                self.advance()
+
+            if self.current_tok.type != TT_LAMBDA_SIGN:
+                return res.failure(InvalidSyntaxError(
+                    self.current_tok.pos_start, self.current_tok.pos_end,
+                    f"Expected ',' or ':'"
+                ))
+        res.register_advancement()
+        #self.advance()
+
+        res.register(self.advance())
+        lambda_expr = res.register(self.command()) #TODO: version work with comp_expression
+        if res.error: return res
+        if self.current_tok.type == TT_RLAMBDA:
+            res.register(self.advance())
+        else:
+            return res.failure(InvalidSyntaxError(
+                self.current_tok.pos_start, self.current_tok.pos_end,
+                "Expected ']'"
+            ))
+
+        args_value_toks = []
+
+        # Check if for ( to get arg values
+        if not self.current_tok.matches(TT_LPAREN):
+            return res.failure(InvalidSyntaxError(
+                self.current_tok.pos_start, self.current_tok.pos_end,
+                f"Expected ("
+            ))
+        res.register_advancement()
+        self.advance()
+
+        args_value_toks.append(res.register(self.command()))  # TODO: check if not atom version work with second_expression
+        if res.error: return res
+
+        # Check if function has more arguments
+        while self.current_tok.matches(TT_COMMA):
+            res.register_advancement()
+            self.advance()
+
+            if self.current_tok.matches(TT_FUNC_RBRACKET):
+                return res.failure(InvalidSyntaxError(
+                    self.current_tok.pos_start, self.current_tok.pos_end,
+                    f"Expected arg"
+                ))
+            res.register_advancement()
+            args_value_toks.append(res.register(res.register(self.atom()))) #TODO check if working
+            if res.error: return res
+
+        if not self.current_tok.matches(TT_RPAREN):
+            return res.failure(InvalidSyntaxError(
+                self.current_tok.pos_start, self.current_tok.pos_end,
+                f"Expected " + ')'
+            ))
+        res.register_advancement()
+        self.advance()
+
+        return res.success(LambdaNode(
+            arg_name_toks,
+            lambda_expr,
+            args_value_toks
+        ))
+
+
+
 
     def func_def(self):
         res = ParseResult()
@@ -249,7 +352,7 @@ class Parser:
                     f"Expected arg"
                 ))
             res.register_advancement()
-            arg_nodes.append(res.register(res.register(self.atom())))
+            arg_nodes.append(res.register(res.register(self.second_expression()))) #TODO: check if not atom
             if res.error: return res
 
         if not self.current_tok.matches(TT_FUNC_RBRACKET):
@@ -264,10 +367,6 @@ class Parser:
             name_to_call,
             arg_nodes
         ))
-
-
-
-
 
 
     def factor(self):
@@ -291,6 +390,10 @@ class Parser:
             return res.success(StringNode(tok))
         elif tok.type == TT_CALL_FUNC:
             call_func = res.register(self.call_func())
+            if res.error: return res
+            return res.success(call_func)
+        elif tok.type == TT_LLAMBDA: #TODO: check if work
+            call_func = res.register(self.lambda_func())
             if res.error: return res
             return res.success(call_func)
 

@@ -77,6 +77,7 @@ class CommentNode:
     def __repr__(self):
         return f'{self.tok}'
 
+
 class PrintedNoteNode:
     BRIGHT_BLUE = '\033[94m'
     RESET = '\033[0m'
@@ -88,6 +89,7 @@ class PrintedNoteNode:
 
     def __repr__(self):
         return f'{self.tok}'
+
 
 class FuncDefNode:
     def __init__(self, var_name_tok, arg_name_toks, body_node):
@@ -110,19 +112,28 @@ class CallFuncNode:
         self.node_to_call = node_to_call
         self.arg_nodes = arg_nodes
 
-        self.pos_start = self.node_to_call.pos_start
+        if self.node_to_call:
+            self.pos_start = self.node_to_call.pos_start
+        else:
+            self.pos_start = 0
 
         if len(self.arg_nodes) > 0:
             self.pos_end = self.arg_nodes[len(self.arg_nodes) - 1].pos_end
-        else:
+        elif self.node_to_call:
             self.pos_end = self.node_to_call.pos_end
+        else:
+            self.pos_end = 0
 
-# class FuncVarNode:
-#     def __init__(self, var_name_tok):
-#         self.var_name_tok = var_name_tok
-#
-#         self.pos_start = self.var_name_tok.pos_start
-#         self.pos_end = self.var_name_tok.pos_end
-#
-#     def __repr__(self):
-#         return f'{self.var_name_tok}'
+
+class LambdaNode:
+    def __init__(self, arg_name_toks, lambda_expr, args_value_toks):
+        self.arg_name_toks = arg_name_toks
+        self.lambda_expr = lambda_expr
+        self.args_value_toks = args_value_toks
+
+        self.pos_start = self.arg_name_toks[0].pos_start
+
+        if len(self.args_value_toks) > 0:
+            self.pos_end = self.args_value_toks[len(self.args_value_toks) - 1].pos_end
+        else:
+            self.pos_end = self.args_value_toks.pos_end

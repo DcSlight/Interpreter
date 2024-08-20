@@ -8,6 +8,8 @@ INTERACTIVE_MODE = True
 if len(sys.argv) == 2:
     INTERACTIVE_MODE = False
     try:
+        if not sys.argv[1].endswith('.lambda'):
+            raise Exception(f'File Name Error: file {sys.argv[1]} not ends with .lambda')
         with open(sys.argv[1]) as file:
             text_file = file.read().splitlines()
 
@@ -22,6 +24,8 @@ if len(sys.argv) == 2:
 
     except FileNotFoundError:
         print('File not found')
+    except Exception as e:
+        print(e.__repr__())
 
 # Interactive interpreter mode.
 while INTERACTIVE_MODE:

@@ -235,8 +235,6 @@ class Bool(Value):
         else:
             return None, Value.illegal_operation(self, other)
 
-
-
     def copy(self):
         copy = Number(self.value)
         copy.set_pos(self.pos_start, self.pos_end)
@@ -349,6 +347,12 @@ class Interpreter:
         func_value = Function(func_name, arg_names, body_node).set_context(context).set_pos(node.pos_start,
                                                                                             node.pos_end)
 
+        if context.symbol_table.get(func_name):
+            return res.failure(FunctionNameDefinedError(
+                func_value.pos_start, func_value.pos_end,
+                f"{func_name} already defined"
+            ))
+
         if node.var_name_tok:
             context.symbol_table.set(func_name, func_value)
 
@@ -367,6 +371,25 @@ class Interpreter:
             if res.error: return res
 
         return_value = res.register(value_to_call.execute(args))
+        if res.error: return res
+        return res.success(return_value)
+
+    def visit_LambdaNode(self, node, context):
+        res = RTResult()
+
+        arg_names = [arg_name.value for arg_name in node.arg_name_toks]
+        lambda_expr = node.lambda_expr
+        # arg_values = [arg_value for arg_value in node.args_value_toks]
+        from FunctionalProgramming.function import Lambda
+        func_value = Lambda(arg_names, lambda_expr).set_context(context).set_pos(node.pos_start,
+                                                                                 node.pos_end)
+
+        arg_values = []
+        for arg_value in node.args_value_toks:
+            arg_values.append(res.register(self.visit(arg_value, context)))
+            if res.error: return res
+
+        return_value = res.register(func_value.execute(arg_values))
         if res.error: return res
         return res.success(return_value)
 

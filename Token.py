@@ -25,7 +25,10 @@ TT_FUNC = '$'
 TT_FUNC_NAME = 'FUNC_NAME'
 TT_FUNC_ARGS = 'FUNC_ARGS'
 TT_FUNC_SIGN = '=>'
-TT_FUNC_CONTEXT = 'FUNC_CONTEXT'
+TT_FUNC_BODY = 'FUNC_BODY'
+TT_LLAMBDA = '['
+TT_RLAMBDA = ']'
+TT_LAMBDA_SIGN = ':'
 TT_CALL_FUNC = '@'
 TT_FUNC_LBRACKET = '{'
 TT_FUNC_RBRACKET = '}'
@@ -43,7 +46,7 @@ TT_EOF = 'EOF'
 TT_EXIT = 'EXIT'
 
 KEYWORDS = [
-    "+", "-", "*", "/", "and", "or", "not", "%", "==", "<", ">", "<=", ">=", "(", ")", ","
+    "+", "-", "*", "/", "%", "==", "<", ">", "<=", ">=", "(", ")", ","
 ]
 
 BOOLEANS = ["True", "False"]

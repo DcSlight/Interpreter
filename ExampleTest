@@ -1,5 +1,0 @@
-#$factorial$ (n) => (n==0) || (n*@factorial{n-1})
-#@factorial{5}
-$fib$ (n) => n == 1 || n == 2 || @fib{n - 1} + @fib{n - 2}
-@fib{8}
-##1 1 2 3 5 8 13 21
