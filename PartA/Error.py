@@ -2,7 +2,7 @@
 # IMPORTS
 #######################################
 
-from strings_with_arrows import *
+from PartA.strings_with_arrows import *
 
 
 #######################################

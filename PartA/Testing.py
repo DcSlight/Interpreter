@@ -1,6 +1,6 @@
 import unittest
 import basic
-from FunctionalProgramming.function import Function
+from PartA.function import Function
 
 
 class MyTestCase(unittest.TestCase):

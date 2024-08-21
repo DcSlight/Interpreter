@@ -1,7 +1,6 @@
-from Position import Position
-from Token import *
-from Error import *
-from FunctionalProgramming.function import Function
+from PartA.Position import Position
+from PartA.Token import *
+from PartA.Error import *
 import string
 
 #######################################

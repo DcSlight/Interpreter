@@ -1,8 +1,8 @@
-from Lexer import  Lexer
-from Parser import Parser
-from interpreter import Interpreter, Number, Bool
-from interpreter import Context
-from Token import SymbolTable
+from PartA.Lexer import Lexer
+from PartA.Parser import Parser
+from PartA.interpreter import Interpreter, Number
+from PartA.interpreter import Context
+from PartA.Token import SymbolTable
 
 global_symbol_table = SymbolTable()
 # global_symbol_table.set("NULL", Number(0))

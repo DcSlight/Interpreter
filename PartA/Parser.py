@@ -1,6 +1,6 @@
-from Error import *
-from Token import *
-from Nodes import *
+from PartA.Error import *
+from PartA.Token import *
+from PartA.Nodes import *
 
 
 #######################################

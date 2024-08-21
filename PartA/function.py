@@ -1,6 +1,4 @@
-import re
-from Token import KEYWORDS
-from interpreter import Interpreter
+from PartA.interpreter import Interpreter
 
 
 class Function:
@@ -22,7 +20,7 @@ class Function:
         return self
 
     def execute(self, args):
-        from interpreter import RTResult, Context, SymbolTable, RTError
+        from PartA.interpreter import RTResult, Context, SymbolTable, RTError
         res = RTResult()
         interpreter = Interpreter()
         new_context = Context(self.name, self.context, self.pos_start)
@@ -100,7 +98,7 @@ class Lambda:
         return self
 
     def execute(self, args):
-        from interpreter import RTResult, Context, SymbolTable, RTError
+        from PartA.interpreter import RTResult, Context, SymbolTable, RTError
         res = RTResult()
         interpreter = Interpreter()
         new_context = Context(self.__repr__(), self.context, self.pos_start)

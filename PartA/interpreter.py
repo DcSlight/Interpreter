@@ -1,7 +1,7 @@
-from Token import *
-from Error import *
+from PartA.Token import *
+from PartA.Error import *
 from abc import abstractmethod
-from Nodes import NestedFuncNode, CallFuncNode, StringNode
+from PartA.Nodes import NestedFuncNode
 
 
 #######################################
@@ -344,7 +344,7 @@ class Interpreter:
         func_name = node.var_name_tok.value if node.var_name_tok else None
         body_node = node.body_node
         arg_names = [arg_name.value for arg_name in node.arg_name_toks]
-        from FunctionalProgramming.function import Function
+        from PartA.function import Function
         func_value = Function(func_name, arg_names, body_node).set_context(context).set_pos(node.pos_start,
                                                                                             node.pos_end)
 
@@ -380,7 +380,7 @@ class Interpreter:
                 # TODO: return value is not function raise error
                 flag = True
 
-                from FunctionalProgramming.function import Function
+                from PartA.function import Function
                 if isinstance(return_value, Function):
                     return_value = res.register(return_value.execute(new_args))
                     value_to_call = return_value
@@ -400,7 +400,7 @@ class Interpreter:
         arg_names = [arg_name.value for arg_name in node.arg_name_toks]
         lambda_expr = node.lambda_expr
         # arg_values = [arg_value for arg_value in node.args_value_toks]
-        from FunctionalProgramming.function import Lambda
+        from PartA.function import Lambda
         func_value = Lambda(arg_names, lambda_expr).set_context(context).set_pos(node.pos_start,
                                                                                  node.pos_end)
 
@@ -419,7 +419,7 @@ class Interpreter:
                 # TODO: return value is not function raise error
                 flag = True
 
-                from FunctionalProgramming.function import Function
+                from PartA.function import Function
                 if isinstance(return_value, Function):
                     return_value = res.register(return_value.execute(new_args))
                     arg_values = new_args
