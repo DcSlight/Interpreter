@@ -1,3 +1,7 @@
+##$boolFunc$ (x,y) => (x > 0) && (y < 10)
+$boolFunc$ (x,y) => (x > 0) && (y < 10)
+##@boolFunc{4,9}
+@boolFunc{4,9}
 ##$bb$ () => $aa$ (x) => 1+x
 $bb$ () => $aa$ (x) => 1+x
 ##@bb{}{2}
