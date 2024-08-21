@@ -142,7 +142,7 @@ Place one has the fun times of linking here, but I can also link back [here](#pl
 ### Basic Commands - CheatSheet
 
 <p align="center">
-  <img src="./assets/cheatsheet.png" alt="Statoscope example" width="550">
+  <img src="./assets/cheatsheet.png" alt="Statoscope example" width="300" height="500">
 </p>
 
 
