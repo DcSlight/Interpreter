@@ -260,8 +260,23 @@ class Context:
 # INTERPRETER
 #######################################
 
+
 class Interpreter:
+    """
+    visit method is the main method of the interpreter.
+    visit calls a dynamic method : visit_<type(node)>
+    when the node is the object the parser created.
+
+    #Note: although python display a warning "Function name should be lowercase"
+    we still need to use it matches the type of node (class).
+    """
+
     def visit(self, node, context):
+        """
+        :param node:
+        :param context:
+        #Note: warning "Unexpected argument" - it is not unexpected because we ensure that it will be visit_<type(node)>
+        """
         method_name = f'visit_{type(node).__name__}'
         method = getattr(self, method_name, self.no_visit_method)
         return method(node, context)
@@ -374,7 +389,7 @@ class Interpreter:
                 new_args = res.register(self.visit(arg_node, context))
                 if not flag:
                     return_value = res.register(value_to_call.execute(args))
-                    if not isinstance(return_value,Function):
+                    if not isinstance(return_value, Function):
                         return res.failure(RTError(
                             return_value.pos_start, return_value.pos_end,
                             "There is no nested function",
@@ -493,4 +508,3 @@ class Interpreter:
             if res.error: return res
 
         return res.success(args)
-
