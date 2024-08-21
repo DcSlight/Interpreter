@@ -7,7 +7,7 @@
 
 ## Table of Contents
 
-* [How to run](#how-to-run)
+* [How To Run](#how-to-run)
 * [Basic Commands](#basic-commands---cheatsheet)
 * [BNF](#bnf)
 * [Use can Diagram - interpreter](#use-case-diagram)
@@ -16,7 +16,7 @@
 * [Interpreter](#interpreter).
  
 
-### How To Run
+## How To Run
 <summary><b>Instructions </b></summary>
 
 1. To run the interpreter run in the terminal:
@@ -43,14 +43,14 @@
     ```
 
 
-### Basic Commands - CheatSheet
+## Basic Commands - CheatSheet
 
-<p align="center">
-  <img src="./assets/cheatsheet.png" alt="Statoscope example" width="450" height="650">
+<p>
+  <img src="./assets/cheatsheet.png" alt="Statoscope example">
 </p>
 
 
-### BNF
+## BNF
 
 <details><summary><b>Show BNF</b></summary>
 
@@ -138,33 +138,33 @@ Here is our BNF, a formal notation used to define the syntax of our programming 
 </details>
 
 
-### Use Case Diagram
+## Use Case Diagram
 In this diagram, you can see the entire system's functionality. The system starts with basic commands provided by the user. After the user sends an input:
 
 1. The lexer tokenizes the data.
 2. The parser checks its validity.
 3. The interpreter executes the command.
-<p align="center">
-  <img src="./assets/use_case_diagram.png" alt="Size Limit CLI">
+<p >
+  <img src="./assets/use_case_diagram.png" alt="Size Limit CLI" height="450" >
 </p>
 
-### System
-<p align="center">
-  <img src="./assets/system.png" alt="Size Limit CLI" >
+## System
+<p >
+  <img src="./assets/system.png" alt="Size Limit CLI" height="300">
 </p>
 
-### Parser 
+## Parser 
 
 The primary role of the parser is to validate commands. A valid command is one that can be converted into an AST (Abstract Syntax Tree). In this diagram, you can see an AST of a FuncDefNode.
 
-<p align="center">
-  <img src="./assets/parser.png" alt="Size Limit CLI" >
+<p >
+  <img src="./assets/parser.png" alt="Size Limit CLI" height="350">
 </p>
 
-### Interpreter
+## Interpreter
 
 The main role of the interpreter is to execute the parsed commands. In the diagram, you can see the execution of a binary operation.
 
-<p align="center">
-  <img src="./assets/interpreter.png" alt="Size Limit CLI" >
+<p >
+  <img src="./assets/interpreter.png" alt="Size Limit CLI" height="250">
 </p>
