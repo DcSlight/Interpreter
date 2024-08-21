@@ -28,12 +28,15 @@ if len(sys.argv) == 2:
         print(e.__repr__())
 
 # Interactive interpreter mode.
-while INTERACTIVE_MODE:
-    text = input('----> ')
-    result, error = basic.run('<stdin>', text)
+try:
+    while INTERACTIVE_MODE:
+        text = input('----> ')
+        result, error = basic.run('<stdin>', text)
 
-    if error:
-        print(error.as_string())
-    elif result == TT_EXIT:
-        break
-    elif result: print(result)
+        if error:
+            print(error.as_string())
+        elif result == TT_EXIT:
+            break
+        elif result: print(result)
+except KeyboardInterrupt:
+    print('Exit - unsafe')
