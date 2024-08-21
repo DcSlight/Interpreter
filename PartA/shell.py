@@ -37,6 +37,7 @@ try:
             print(error.as_string())
         elif result == TT_EXIT:
             break
-        elif result: print(result)
+        elif result:
+            print(result)
 except KeyboardInterrupt:
     print('Exit - unsafe')

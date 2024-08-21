@@ -6,7 +6,6 @@ class Function:
         self.name = name or "<anonymous>"
         self.args = args
         self.body = body
-        # TODO: maybe move to Value class
         self.set_pos()
         self.set_context()
 

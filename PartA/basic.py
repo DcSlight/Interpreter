@@ -17,7 +17,7 @@ def run(fn, text):
     # Generate tokens
     lexer = Lexer(fn, text)
     tokens, error = lexer.make_tokens()
-    if error: return None, error #TODO: change
+    if error: return None, error
 
     # Generate AST
     parser = Parser(tokens)

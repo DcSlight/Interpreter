@@ -224,14 +224,12 @@ class Bool(Value):
 
     def anded_by(self, other):
         if isinstance(other, Bool) or isinstance(other, Number):
-            # TODO: check for (1 > 3) && (1 < 2)
             return Bool((self.value and other.value)).set_context(self.context), None
         else:
             return None, Value.illegal_operation(self, other)
 
     def ored_by(self, other):
         if isinstance(other, Bool) or isinstance(other, Number):
-            # TODO: check for (1 > 3) && (1 < 2)
             return Bool((self.value or other.value)).set_context(self.context), None
         else:
             return None, Value.illegal_operation(self, other)
@@ -375,6 +373,7 @@ class Interpreter:
                 new_args = res.register(self.visit(arg_node, context))
                 if not flag:
                     return_value = res.register(value_to_call.execute(args))
+
                 else:
                     return_value = res.register(value_to_call.execute(new_args))
                 # TODO: return value is not function raise error
@@ -385,6 +384,12 @@ class Interpreter:
                     return_value = res.register(return_value.execute(new_args))
                     value_to_call = return_value
                     args = new_args
+                else:
+                    return res.failure(RTError(
+                        return_value.pos_start, return_value.pos_end,
+                        "There is no nested function",
+                        context
+                    ))
             else:
                 args.append(res.register(self.visit(arg_node, context)))
             if res.error: return res
