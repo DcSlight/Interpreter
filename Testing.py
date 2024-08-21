@@ -86,11 +86,15 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(basic.run('<testing>', "$function () => 4+5")[1].details, "Expected $")
         self.assertEqual(basic.run('<testing>', "@function{}")[1].details, "'function' is not defined")
         self.assertEqual(basic.run('<testing>', "<sign not in language>")[1].details,
-                         "Expected int or float or boolean or string")  # TODO: give a better error msg
+                         "Expected int or float or boolean or string")
         self.assertEqual(basic.run('<testing>', "a+2")[1].details,
                          "'a' is not defined")
         self.assertEqual(basic.run('<testing>', "$secFunction$ () => 4+")[1].details,
                          "Expected int or float or boolean or string")
+        self.assertEqual(str(basic.run('<testing>', "$function$ () => 20+50")[0]),
+                         str(Function("function", None, None)))
+        self.assertEqual(basic.run('<testing>', "$function$ () => 90/3")[1].details,
+                         "function already defined")
 
 
 if __name__ == '__main__':
