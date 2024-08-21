@@ -1,5 +1,29 @@
 # Interpreter
 
+### Students
+
+1. Sapir Gilany 
+2. Idan Noyshul 
+
+## Table of Contents
+
+* [How to run](#how-to-run)
+* [BNF](#bnf)
+* [Ant Design](https://github.com/ant-design/ant-design/)
+* [Autoprefixer](https://github.com/postcss/autoprefixer)
+* [PostCSS](https://github.com/postcss/postcss) reduced
+  [25% of the size](https://github.com/postcss/postcss/commit/150edaa42f6d7ede73d8c72be9909f0a0f87a70f).
+* [Browserslist](https://github.com/browserslist/browserslist) reduced
+  [25% of the size](https://github.com/browserslist/browserslist/commit/640b62fa83a20897cae75298a9f2715642531623).
+* [EmojiMart](https://github.com/missive/emoji-mart) reduced
+  [20% of the size](https://github.com/missive/emoji-mart/pull/111)
+* [nanoid](https://github.com/ai/nanoid) reduced
+  [33% of the size](https://github.com/ai/nanoid/commit/036612e7d6cc5760313a8850a2751a5e95184eab).
+* [React Focus Lock](https://github.com/theKashey/react-focus-lock) reduced
+  [32% of the size](https://github.com/theKashey/react-focus-lock/pull/48).
+* [Logux](https://github.com/logux) reduced
+  [90% of the size](https://github.com/logux/logux-client/commit/62b258e20e1818b23ae39b9c4cd49e2495781e91).
+
 -----Explain:
 
 * **BNF** and **tree-shaking** support.
@@ -50,24 +74,7 @@ We are using [Statoscope] for this analysis.
 [cult-img]:      http://cultofmartians.com/assets/badges/badge.svg
 [cult]:          http://cultofmartians.com/tasks/size-limit-config.html
 
-## Who Uses Size Limit
 
-* [How to run](#how-to-run)
-* [Material-UI](https://github.com/callemall/material-ui)
-* [Ant Design](https://github.com/ant-design/ant-design/)
-* [Autoprefixer](https://github.com/postcss/autoprefixer)
-* [PostCSS](https://github.com/postcss/postcss) reduced
-  [25% of the size](https://github.com/postcss/postcss/commit/150edaa42f6d7ede73d8c72be9909f0a0f87a70f).
-* [Browserslist](https://github.com/browserslist/browserslist) reduced
-  [25% of the size](https://github.com/browserslist/browserslist/commit/640b62fa83a20897cae75298a9f2715642531623).
-* [EmojiMart](https://github.com/missive/emoji-mart) reduced
-  [20% of the size](https://github.com/missive/emoji-mart/pull/111)
-* [nanoid](https://github.com/ai/nanoid) reduced
-  [33% of the size](https://github.com/ai/nanoid/commit/036612e7d6cc5760313a8850a2751a5e95184eab).
-* [React Focus Lock](https://github.com/theKashey/react-focus-lock) reduced
-  [32% of the size](https://github.com/theKashey/react-focus-lock/pull/48).
-* [Logux](https://github.com/logux) reduced
-  [90% of the size](https://github.com/logux/logux-client/commit/62b258e20e1818b23ae39b9c4cd49e2495781e91).
 
 ## Title
 
@@ -103,17 +110,7 @@ Place one has the fun times of linking here, but I can also link back [here](#pl
    be unstable. [See here](https://github.com/mbalabash/estimo/issues/5)
    for more details.
 
-
-## Usage
-
-### Python Application
-
-Suitable for applications that have their own bundler and send the JS bundle
-directly to a client (without publishing it to npm). Think of a user-facing app
-or website, like an email client, a CRM, a landing page or a blog with
-interactive elements, using React/Vue/Svelte lib or vanilla JS.
-
-### How to run
+### How To Run
 <details><summary><b>Show instructions </b></summary>
 
 1. To run the interpreter run in the terminal:
@@ -125,51 +122,35 @@ interactive elements, using React/Vue/Svelte lib or vanilla JS.
 2. To run the interpreter with the example run in the terminal:
 
     ```sh
-     python shell.py ExampleTest.lambda
+    python shell.py ExampleTest.lambda
     ```
 
-3. Here’s how you can get the size for your current project:
+3. To run the testing unit:
 
     ```sh
-    $ npm run size
-
-      Package size: 30.08 kB with all dependencies, minified and brotlied
+    python Testing.py 
     ```
 
-4. Now, let’s set the limit. Add 25% to the current total size and use that as
-   the limit in your `package.json`:
-
-    ```diff
-      "size-limit": [
-        {
-    +     "limit": "35 kB",
-          "path": "dist/app-*.js"
-        }
-      ],
+4. To exit from the interpreter mode:
+    ```sh
+    EXIT
     ```
-
-5. Add the `size` script to your test suite:
-
-    ```diff
-      "scripts": {
-        "build": "webpack ./webpack.config.js",
-        "size": "npm run build && size-limit",
-    -   "test": "vitest && eslint ."
-    +   "test": "vitest && eslint . && npm run size"
-      }
-    ```
-
-6. If you don’t have a continuous integration service running, don’t forget
-   to add one — start with Github Actions.
 
 </details>
+
+
+### Basic Commands - CheatSheet
+
+<p align="center">
+  <img src="./assets/cheatsheet.png" alt="Statoscope example" width="550">
+</p>
 
 
 ### BNF
 
 <details><summary><b>Show BNF</b></summary>
 
-2. Add the `size-limit` section and the `size` script to your `package.json`:
+Here is our BNF, a formal notation used to define the syntax of our programming languages, that explains the language rules:
 
     ```
     <language_command> ::= <func_def> | <call_func> | <comment> | <printed_note> | <lambda> | <comp_expression> | <TT_EXIT>
