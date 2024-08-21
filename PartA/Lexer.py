@@ -7,8 +7,6 @@ import string
 # CONSTANTS
 #######################################
 
-# TODO: move to the BNF
-
 DIGITS = '0123456789'
 LETTERS = string.ascii_letters
 LETTERS_DIGITS = LETTERS + DIGITS

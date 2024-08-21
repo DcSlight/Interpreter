@@ -103,11 +103,10 @@ class Parser:
             if res.error: return res
             return res.success(lambda_func)
 
-
         return self.bin_op(self.comp_expression, (TT_AND, TT_OR))
 
     def comp_expression(self):
-        # Check if there is not operation
+        # Check if there is no operation
         res = ParseResult()
         if self.current_tok.matches(TT_NOT):
             op_tok = self.current_tok
@@ -117,7 +116,6 @@ class Parser:
             node = res.register(self.comp_expression())
             if res.error: return res
             return res.success(UnaryOpNode(op_tok, node))
-
 
         return self.bin_op(self.second_expression, (TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE))
 
@@ -160,10 +158,8 @@ class Parser:
                     f"Expected ',' or ':'"
                 ))
         res.register_advancement()
-        #self.advance()
-
         res.register(self.advance())
-        lambda_expr = res.register(self.command()) #TODO: version work with comp_expression
+        lambda_expr = res.register(self.command())
         if res.error: return res
         if self.current_tok.type == TT_RLAMBDA:
             res.register(self.advance())
@@ -188,7 +184,7 @@ class Parser:
             res.register_advancement()
             self.advance()
 
-            arg_value_temp.append(res.register(self.command()))  # TODO: check if not atom version work with second_expression
+            arg_value_temp.append(res.register(self.command()))
             if res.error: return res
 
             # Check if function has more arguments
@@ -202,7 +198,7 @@ class Parser:
                         f"Expected arg"
                     ))
                 res.register_advancement()
-                arg_value_temp.append(res.register(res.register(self.atom()))) #TODO check if working
+                arg_value_temp.append(res.register(res.register(self.atom())))
                 if res.error: return res
 
             if not self.current_tok.matches(TT_RPAREN):
@@ -223,9 +219,6 @@ class Parser:
             lambda_expr,
             args_value_toks
         ))
-
-
-
 
     def func_def(self):
         res = ParseResult()
@@ -308,9 +301,9 @@ class Parser:
 
         if res.error:
             return res.failure(InvalidSyntaxError(
-                    self.current_tok.pos_start, self.current_tok.pos_end,
-                    "Expected int, float, string, '+', '-', '(' or '!'"
-                ))
+                self.current_tok.pos_start, self.current_tok.pos_end,
+                "Expected int, float, string, '+', '-', '(' or '!'"
+            ))
 
         return res.success(FuncDefNode(
             var_name_tok,
@@ -328,7 +321,7 @@ class Parser:
                 self.current_tok.pos_start, self.current_tok.pos_end,
                 f"Expected function name"
             ))
-        name_to_call = res.register(self.second_expression()) #TODO: check if not atom
+        name_to_call = res.register(self.second_expression())
         arg_nodes = []
         arg_nodes_temp = []
 
@@ -344,7 +337,7 @@ class Parser:
             self.advance()
             if not self.current_tok.matches(TT_FUNC_RBRACKET):
                 # Check if function has argument
-                arg_nodes_temp.append(res.register(self.second_expression())) #TODO: check if not atom
+                arg_nodes_temp.append(res.register(self.second_expression()))
                 if res.error: return res
 
                 # Check if function has more arguments
@@ -358,7 +351,7 @@ class Parser:
                             f"Expected arg"
                         ))
                     res.register_advancement()
-                    arg_nodes_temp.append(res.register(res.register(self.second_expression()))) #TODO: check if not atom
+                    arg_nodes_temp.append(res.register(res.register(self.second_expression())))
                     if res.error: return res
 
                 if not self.current_tok.matches(TT_FUNC_RBRACKET):
@@ -378,7 +371,6 @@ class Parser:
             name_to_call,
             arg_nodes
         ))
-
 
     def factor(self):
         res = ParseResult()
@@ -403,7 +395,7 @@ class Parser:
             call_func = res.register(self.call_func())
             if res.error: return res
             return res.success(call_func)
-        elif tok.type == TT_LLAMBDA: #TODO: check if work
+        elif tok.type == TT_LLAMBDA:
             call_func = res.register(self.lambda_func())
             if res.error: return res
             return res.success(call_func)
@@ -429,8 +421,6 @@ class Parser:
     def first_expression(self):
         return self.bin_op(self.factor, (TT_MUL, TT_DIV, TT_MODULO))
 
-    # expr - second expression TODO: delete
-    # term - first expression TODO: delete
     def second_expression(self):
         return self.bin_op(self.first_expression, (TT_PLUS, TT_MINUS))
 
@@ -448,7 +438,7 @@ class Parser:
             op_tok = self.current_tok
             res.register_advancement()
             self.advance()
-            right = res.register(func_b()) #TODO: check func_b
+            right = res.register(func_b())
             if res.error: return res
             left = BinOpNode(left, op_tok, right)
 

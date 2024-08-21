@@ -428,7 +428,6 @@ class Interpreter:
                         ))
                 else:
                     return_value = res.register(return_value.execute(new_args))
-                # TODO: return value is not function raise error
                 flag = True
 
                 from PartA.function import Function
