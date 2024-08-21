@@ -46,7 +46,7 @@
 ## Basic Commands - CheatSheet
 
 <p>
-  <img src="./assets/cheatsheet.png" alt="Statoscope example">
+  <img src="./assets/cheatsheet.png" alt="Statoscope example" height="700">
 </p>
 
 
