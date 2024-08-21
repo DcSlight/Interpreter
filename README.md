@@ -3,10 +3,10 @@
 ### Students
 
 1. Sapir Gilany 
-2. Idan Noyshul 
+2. Idan Noyshul
 
 ## Table of Contents
-
+* [File Order](#file-order)
 * [How To Run](#how-to-run)
 * [Basic Commands](#basic-commands---cheatsheet)
 * [BNF](#bnf)
@@ -14,7 +14,13 @@
 * [System](#system)
 * [Parser](#parser-)
 * [Interpreter](#interpreter-)
- 
+
+##### File Order
+1. PartA – Interpreter Folder
+   1. BNF - in GrammarText.txt
+   2. File Mode - file with commands - ExampleTest.lambda
+   3. Testing - Testing.py
+2. PartB - the second chapter of the project (answering question)
 
 ## How To Run
 <summary><b>Instructions </b></summary>
@@ -55,7 +61,7 @@
 <details><summary><b>Show BNF</b></summary>
 
 Here is our BNF, a formal notation used to define the syntax of our programming languages, that explains the language rules:
-
+The BNF file is in PartA/GrammarText.txt
     ```
     <language_command> ::= <func_def> | <call_func> | <comment> | <printed_note> | <lambda> | <comp_expression> | <TT_EXIT>
     <func_def> ::= <TT_FUNC> <func_name> <TT_FUNC> <args> <TT_FUNC_SIGN> <language_command>
@@ -110,7 +116,7 @@ Here is our BNF, a formal notation used to define the syntax of our programming 
     <TT_EXIT> ::= <whitespace>* "EXIT" <whitespace>*
     <INT> ::= "-" <INT> | <number> | <float>
     <float> ::= <number> "." <number>
-    <number> ::= <non_digit_zero> <digits>*
+    <number> ::= <non_digit_zero> <digits>* | <zero>
     <digits> ::= <zero> | <non_digit_zero>
     <non_digit_zero> ::= [1-9]+
     <zero> ::= "0"
