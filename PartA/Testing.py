@@ -79,6 +79,10 @@ class MyTestCase(unittest.TestCase):
                          str(Function("multiply", None, None)))
         self.assertEqual(basic.run('<testing>', "[ x : $ square $(y) => x + @ multiply { y } ] (4)(5)")[0].value,
                          29)
+        self.assertEqual(str(basic.run('<testing>', "$ccc$ () => $bbb$ () => $aaa$ (x,y) => x+y")[0]),
+                         str(Function("ccc", None, None)))
+        self.assertEqual(basic.run('<testing>', "@ccc{}{}{3,5}")[0].value,
+                         8)
 
     def test_errors(self):
         self.assertEqual(basic.run('<testing>', "2+")[1].details, "Expected int or float or boolean or string")
@@ -95,6 +99,10 @@ class MyTestCase(unittest.TestCase):
                          str(Function("function", None, None)))
         self.assertEqual(basic.run('<testing>', "$function$ () => 90/3")[1].details,
                          "function already defined")
+        self.assertEqual(str(basic.run('<testing>', "$a$ (x) => x+1")[0]),
+                         str(Function("a", None, None)))
+        self.assertEqual(basic.run('<testing>', "@a{3}{}")[1].details,
+                         "There is no nested function")
 
 
 if __name__ == '__main__':

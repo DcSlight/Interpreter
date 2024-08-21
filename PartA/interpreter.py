@@ -367,29 +367,30 @@ class Interpreter:
 
         return_value = None
         flag = False
+        from PartA.function import Function
         for arg_node in node.arg_nodes:
             if isinstance(arg_node, NestedFuncNode):
 
                 new_args = res.register(self.visit(arg_node, context))
                 if not flag:
                     return_value = res.register(value_to_call.execute(args))
+                    if not isinstance(return_value,Function):
+                        return res.failure(RTError(
+                            return_value.pos_start, return_value.pos_end,
+                            "There is no nested function",
+                            context
+                        ))
 
                 else:
                     return_value = res.register(value_to_call.execute(new_args))
                 # TODO: return value is not function raise error
                 flag = True
 
-                from PartA.function import Function
                 if isinstance(return_value, Function):
                     return_value = res.register(return_value.execute(new_args))
                     value_to_call = return_value
                     args = new_args
-                else:
-                    return res.failure(RTError(
-                        return_value.pos_start, return_value.pos_end,
-                        "There is no nested function",
-                        context
-                    ))
+
             else:
                 args.append(res.register(self.visit(arg_node, context)))
             if res.error: return res
