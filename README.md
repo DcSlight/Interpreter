@@ -62,6 +62,7 @@
 
 Here is our BNF, a formal notation used to define the syntax of our programming languages, that explains the language rules:
 The BNF file is in PartA/GrammarText.txt
+
     ```
     <language_command> ::= <func_def> | <call_func> | <comment> | <printed_note> | <lambda> | <comp_expression> | <TT_EXIT>
     <func_def> ::= <TT_FUNC> <func_name> <TT_FUNC> <args> <TT_FUNC_SIGN> <language_command>
@@ -69,7 +70,7 @@ The BNF file is in PartA/GrammarText.txt
     <arg_value> ::= <arg_value> <TT_COMMA> <atom> | <atom>
     <nested_func> ::= <TT_FUNC_LBRACKET> <arg_value> <TT_FUNC_RBRACKET> | <TT_FUNC_LBRACKET>  <TT_FUNC_RBRACKET>
     <atom> ::= <INT> | <TT_STRING> | <bool>
-   
+
     <comment> ::= <TT_COMMENT> <text>*
     <text> ::= <TT_STRING> | <INT> | <TT_STRING> <text> | <INT> <text>
     <printed_note> ::= <TT_PRINTED_NOTE> <text>*
