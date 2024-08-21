@@ -137,3 +137,20 @@ class LambdaNode:
             self.pos_end = self.args_value_toks[len(self.args_value_toks) - 1].pos_end
         else:
             self.pos_end = self.args_value_toks.pos_end
+
+
+class NestedFuncNode:
+    def __init__(self, arg_values):
+        self.arg_values = arg_values
+
+        if self.arg_values:
+            self.pos_start = self.arg_values[0].pos_start
+        else:
+            self.pos_start = 0
+
+        if len(self.arg_values) > 0:
+            self.pos_end = self.arg_values[len(self.arg_values) - 1].pos_end
+        elif self.arg_values:
+            self.pos_end = self.arg_values.pos_end
+        else:
+            self.pos_end = 0

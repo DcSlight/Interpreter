@@ -1,6 +1,7 @@
 from Token import *
 from Error import *
 from abc import abstractmethod
+from Nodes import NestedFuncNode, CallFuncNode, StringNode
 
 
 #######################################
@@ -366,11 +367,30 @@ class Interpreter:
         if res.error: return res
         value_to_call = value_to_call.copy().set_pos(node.pos_start, node.pos_end)
 
+        return_value = None
+        flag = False
         for arg_node in node.arg_nodes:
-            args.append(res.register(self.visit(arg_node, context)))
+            if isinstance(arg_node, NestedFuncNode):
+
+                new_args = res.register(self.visit(arg_node, context))
+                if not flag:
+                    return_value = res.register(value_to_call.execute(args))
+                else:
+                    return_value = res.register(value_to_call.execute(new_args))
+                # TODO: return value is not function raise error
+                flag = True
+
+                from FunctionalProgramming.function import Function
+                if isinstance(return_value, Function):
+                    return_value = res.register(return_value.execute(new_args))
+                    value_to_call = return_value
+                    args = new_args
+            else:
+                args.append(res.register(self.visit(arg_node, context)))
             if res.error: return res
 
-        return_value = res.register(value_to_call.execute(args))
+        if not flag:
+            return_value = res.register(value_to_call.execute(args))
         if res.error: return res
         return res.success(return_value)
 
@@ -385,11 +405,30 @@ class Interpreter:
                                                                                  node.pos_end)
 
         arg_values = []
+
+        return_value = None
+        flag = False
         for arg_value in node.args_value_toks:
-            arg_values.append(res.register(self.visit(arg_value, context)))
+            if isinstance(arg_value, NestedFuncNode):
+
+                new_args = res.register(self.visit(arg_value, context))
+                if not flag:
+                    return_value = res.register(func_value.execute(arg_values))
+                else:
+                    return_value = res.register(return_value.execute(new_args))
+                # TODO: return value is not function raise error
+                flag = True
+
+                from FunctionalProgramming.function import Function
+                if isinstance(return_value, Function):
+                    return_value = res.register(return_value.execute(new_args))
+                    arg_values = new_args
+            else:
+                arg_values.append(res.register(self.visit(arg_value, context)))
             if res.error: return res
 
-        return_value = res.register(func_value.execute(arg_values))
+        if not flag:
+            return_value = res.register(func_value.execute(arg_values))
         if res.error: return res
         return res.success(return_value)
 
@@ -434,3 +473,13 @@ class Interpreter:
     def visit_ExitNode(self, node, context):
         res = RTResult()
         return res.success(node.tok)
+
+    def visit_NestedFuncNode(self, node, context):
+        res = RTResult()
+        args = []
+        for arg_node in node.arg_values:
+            args.append(res.register(self.visit(arg_node, context)))
+            if res.error: return res
+
+        return res.success(args)
+

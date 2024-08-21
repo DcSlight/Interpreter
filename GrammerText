@@ -1,17 +1,77 @@
-<lang> ::= <firstExp> | <secondExp>
-<firstExp> ::= <operand> <firstOP> <operand> | "(" <firstExp> ")"
-<secondExp> ::= <operand> <secondOP> <operand>  | "(" <secondExp> ")"
-<firstOP> ::= "*" | "/"
-<secondOP> ::= "-" | "+"
-<operand> ::= <integer> | <firstExp> | <secondExp>
-<integer> ::= "-" <number> | <number>
-<number> ::= <digits> <number> | <number> <zero> <number> | <digits> | <zero>
-<digits> ::=  "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<language_command> ::= <func_def> | <call_func> | <comment> | <printed_note> | <lambda> | <comp_expression> | <TT_EXIT>
+<func_def> ::= <TT_FUNC> <func_name> <TT_FUNC> <args> <TT_FUNC_SIGN> <language_command>
+
+<call_func> ::= <TT_CALL_FUNC> <func_name> <nested_func>+ | <TT_CALL_FUNC> <func_name> <nested_func>+
+<arg_value> ::= <arg_value> <TT_COMMA> <atom> | <atom>
+<nested_func> ::= <TT_FUNC_LBRACKET> <arg_value> <TT_FUNC_RBRACKET> | <TT_FUNC_LBRACKET>  <TT_FUNC_RBRACKET>
+<atom> ::= <INT> | <TT_STRING> | <bool>
+
+<comment> ::= <TT_COMMENT> <text>*
+<text> ::= <TT_STRING> | <INT> | <TT_STRING> <text> | <INT> <text>
+<printed_note> ::= <TT_PRINTED_NOTE> <text>*
+<lambda> ::= <TT_LLAMBDA> <arg_name> <TT_LAMBDA_SIGN> <language_command> <TT_RLAMBDA> <nested_args>+
+<nested_args> ::= <TT_LPAREN> <arg_value> <TT_RPAREN> | <TT_LPAREN> <TT_RPAREN>
+
+<comp_expression> ::= <TT_NOT> <comp_expression> | <second_expression> <AND_OR> <second_expression> | <second_expression>
+<second_expression> ::= <first_expression> <BOOL_OPS> <first_expression> | <first_expression> | <second_expression> <BOOL_OPS> <second_expression>
+<first_expression> ::= <factor> <PLUS_MINUS> <factor> | <factor> | <first_expression> <PLUS_MINUS> <first_expression>
+<factor> ::= <INT> | <bool> | <TT_STRING> | <lambda> | <TT_LPAREN> <comp_expression> <TT_RPAREN> | <factor> <MUL_DIV_MOD> <factor> | <call_func> | <lambda>
+
+<TT_FUNC> ::=  <whitespace>* "$"  <whitespace>*
+<func_name> ::=  <whitespace>* <TT_STRING>  <whitespace>*
+<TT_LPAREN> ::=  <whitespace>* "("  <whitespace>*
+<TT_RPAREN> ::=  <whitespace>* ")"  <whitespace>*
+<args> ::= <TT_LPAREN> <arg_name> <TT_RPAREN> |  <TT_LPAREN> <TT_RPAREN>
+<arg_name> ::= <TT_STRING> <TT_COMMA> <TT_STRING> | <TT_STRING>
+<TT_FUNC_SIGN> ::=  <whitespace>* "=>"  <whitespace>*
+
+<TT_LLAMBDA> ::= <whitespace>* "[" <whitespace>*
+<TT_RLAMBDA> ::= <whitespace>* "]" <whitespace>*
+<TT_LAMBDA_SIGN> ::= <whitespace>* ":" <whitespace>*
+
+
+<TT_CALL_FUNC> ::= <whitespace>* "@" <whitespace>*
+<TT_FUNC_LBRACKET> ::= <whitespace>* "{" <whitespace>*
+<TT_FUNC_RBRACKET> ::= <whitespace>* "}" <whitespace>*
+
+<AND_OR> ::= <TT_AND> | <TT_OR>
+<TT_AND> ::= <whitespace>* "&&" <whitespace>*
+<TT_OR> ::= <whitespace>* "||" <whitespace>*
+<TT_STRING> ::= <whitespace>* <letters> <whitespace>*
+<letters> ::= <small_letter> <TT_STRING> | <large_letter> <TT_STRING> | <small_letter> | <large_letter>
+<small_letter> ::= [a-z]+
+<large_letter> ::= [A-Z]+
+
+<TRUE> ::= <whitespace>* "True" <whitespace>*
+<FALSE> ::= <whitespace>* "False" <whitespace>*
+<bool> ::= <TRUE> | <FALSE>
+<TT_COMMA> ::= <whitespace>* "," <whitespace>*
+<TT_NOT> ::= <whitespace>* "!" <whitespace>*
+<TT_COMMENT> ::= <whitespace>* "#"
+<TT_PRINTED_NOTE> ::= <whitespace>* "##"
+<TT_EXIT> ::= <whitespace>* "EXIT" <whitespace>*
+<INT> ::= "-" <INT> | <number> | <float>
+<float> ::= <number> "." <number>
+<number> ::= <non_digit_zero> <digits>*
+<digits> ::= <zero> | <non_digit_zero>
+<non_digit_zero> ::= [1-9]+
 <zero> ::= "0"
 
+<PLUS_MINUS> ::= <TT_PLUS> | <TT_MINUS>
+<TT_PLUS> ::=  <whitespace>* "+"  <whitespace>*
+<TT_MINUS> ::=  <whitespace>* "-"  <whitespace>*
 
-<function> ::= "$" <name> "$" <args> "=>" <func_context>
-<name> ::= [a-z]+ | [A-Z]+
-<args> ::= "(" <arg> ")"
-<arg> ::= [a-z]+ | [A-Z]+ | [a-z]+ "," <arg> | [A-Z]+ "," <arg>
-<func_context> ::= [a-z]+ | [A-Z]+
+<MUL_DIV_MOD> ::= <TT_MUL> | <TT_DIV> | <TT_MODULO>
+<TT_MUL> ::=  <whitespace>* "*"  <whitespace>*
+<TT_DIV> ::=  <whitespace>* "/"  <whitespace>*
+<TT_MODULO> ::=  <whitespace>* "%"  <whitespace>*
+
+<BOOL_OPS> ::= <EE> | <NE> | <GT> | <GTE> | <LT> | <LTE>
+<EE> ::= <whitespace>* "==" <whitespace>*
+<NE> ::= <whitespace>* "!=" <whitespace>*
+<GT> ::= <whitespace>* ">" <whitespace>*
+<LT> ::= <whitespace>* "<" <whitespace>*
+<GTE> ::= <whitespace>* ">=" <whitespace>*
+<LTE> ::= <whitespace>* "<=" <whitespace>*
+
+<whitespace> ::= " " | "\t"

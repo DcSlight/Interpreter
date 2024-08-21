@@ -174,40 +174,49 @@ class Parser:
             ))
 
         args_value_toks = []
+        arg_value_temp = []
 
-        # Check if for ( to get arg values
-        if not self.current_tok.matches(TT_LPAREN):
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                f"Expected ("
-            ))
-        res.register_advancement()
-        self.advance()
-
-        args_value_toks.append(res.register(self.command()))  # TODO: check if not atom version work with second_expression
-        if res.error: return res
-
-        # Check if function has more arguments
-        while self.current_tok.matches(TT_COMMA):
+        counter = 0
+        while self.current_tok.matches(TT_LPAREN):
+            counter += 1
+            # Check if for ( to get arg values
+            if not self.current_tok.matches(TT_LPAREN):
+                return res.failure(InvalidSyntaxError(
+                    self.current_tok.pos_start, self.current_tok.pos_end,
+                    f"Expected ("
+                ))
             res.register_advancement()
             self.advance()
 
-            if self.current_tok.matches(TT_FUNC_RBRACKET):
-                return res.failure(InvalidSyntaxError(
-                    self.current_tok.pos_start, self.current_tok.pos_end,
-                    f"Expected arg"
-                ))
-            res.register_advancement()
-            args_value_toks.append(res.register(res.register(self.atom()))) #TODO check if working
+            arg_value_temp.append(res.register(self.command()))  # TODO: check if not atom version work with second_expression
             if res.error: return res
 
-        if not self.current_tok.matches(TT_RPAREN):
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                f"Expected " + ')'
-            ))
-        res.register_advancement()
-        self.advance()
+            # Check if function has more arguments
+            while self.current_tok.matches(TT_COMMA):
+                res.register_advancement()
+                self.advance()
+
+                if self.current_tok.matches(TT_FUNC_RBRACKET):
+                    return res.failure(InvalidSyntaxError(
+                        self.current_tok.pos_start, self.current_tok.pos_end,
+                        f"Expected arg"
+                    ))
+                res.register_advancement()
+                arg_value_temp.append(res.register(res.register(self.atom()))) #TODO check if working
+                if res.error: return res
+
+            if not self.current_tok.matches(TT_RPAREN):
+                return res.failure(InvalidSyntaxError(
+                    self.current_tok.pos_start, self.current_tok.pos_end,
+                    f"Expected " + ')'
+                ))
+            res.register_advancement()
+            self.advance()
+            if (counter == 1):
+                args_value_toks.extend(arg_value_temp)
+            else:
+                args_value_toks.append(NestedFuncNode(arg_value_temp))
+            arg_value_temp = []
 
         return res.success(LambdaNode(
             arg_name_toks,
@@ -321,47 +330,49 @@ class Parser:
             ))
         name_to_call = res.register(self.second_expression()) #TODO: check if not atom
         arg_nodes = []
+        arg_nodes_temp = []
 
-        if not self.current_tok.matches(TT_FUNC_LBRACKET):
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                f"Expected " + '{'
-            ))
-        res.register_advancement()
-        self.advance()
-        if self.current_tok.matches(TT_FUNC_RBRACKET):
-            res.register_advancement()
-            self.advance()
-            return res.success(CallFuncNode(
-                name_to_call,
-                arg_nodes
-            ))
-
-        # Check if function has argument
-        arg_nodes.append(res.register(self.second_expression())) #TODO: check if not atom
-        if res.error: return res
-
-        # Check if function has more arguments
-        while self.current_tok.matches(TT_COMMA):
-            res.register_advancement()
-            self.advance()
-
-            if self.current_tok.matches(TT_FUNC_RBRACKET):
+        counter = 0
+        while self.current_tok.matches(TT_FUNC_LBRACKET):
+            counter += 1
+            if not self.current_tok.matches(TT_FUNC_LBRACKET):
                 return res.failure(InvalidSyntaxError(
                     self.current_tok.pos_start, self.current_tok.pos_end,
-                    f"Expected arg"
+                    f"Expected " + '{'
                 ))
             res.register_advancement()
-            arg_nodes.append(res.register(res.register(self.second_expression()))) #TODO: check if not atom
-            if res.error: return res
+            self.advance()
+            if not self.current_tok.matches(TT_FUNC_RBRACKET):
+                # Check if function has argument
+                arg_nodes_temp.append(res.register(self.second_expression())) #TODO: check if not atom
+                if res.error: return res
 
-        if not self.current_tok.matches(TT_FUNC_RBRACKET):
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                f"Expected " + '}'
-            ))
-        res.register_advancement()
-        self.advance()
+                # Check if function has more arguments
+                while self.current_tok.matches(TT_COMMA):
+                    res.register_advancement()
+                    self.advance()
+
+                    if self.current_tok.matches(TT_FUNC_RBRACKET):
+                        return res.failure(InvalidSyntaxError(
+                            self.current_tok.pos_start, self.current_tok.pos_end,
+                            f"Expected arg"
+                        ))
+                    res.register_advancement()
+                    arg_nodes_temp.append(res.register(res.register(self.second_expression()))) #TODO: check if not atom
+                    if res.error: return res
+
+                if not self.current_tok.matches(TT_FUNC_RBRACKET):
+                    return res.failure(InvalidSyntaxError(
+                        self.current_tok.pos_start, self.current_tok.pos_end,
+                        f"Expected " + '}'
+                    ))
+            res.register_advancement()
+            self.advance()
+            if (counter == 1):
+                arg_nodes.extend(arg_nodes_temp)
+            else:
+                arg_nodes.append(NestedFuncNode(arg_nodes_temp))
+            arg_nodes_temp = []
 
         return res.success(CallFuncNode(
             name_to_call,
