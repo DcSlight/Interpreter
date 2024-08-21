@@ -12,8 +12,8 @@
 * [BNF](#bnf)
 * [Use can Diagram - interpreter](#use-case-diagram)
 * [System](#system)
-* [Parser](#parser-)
-* [Interpreter](#interpreter-)
+* [Parser](#parser)
+* [Interpreter](#interpreter)
 
 ##### File Order
 1. PartA – Interpreter Folder
@@ -160,7 +160,7 @@ In this diagram, you can see the entire system's functionality. The system start
   <img src="./assets/system.png" alt="Size Limit CLI" height="300">
 </p>
 
-## Parser 
+## Parser
 
 The primary role of the parser is to validate commands. A valid command is one that can be converted into an AST (Abstract Syntax Tree). In this diagram, you can see an AST of a FuncDefNode.
 
@@ -168,7 +168,7 @@ The primary role of the parser is to validate commands. A valid command is one t
   <img src="./assets/parser.png" alt="Size Limit CLI" height="350">
 </p>
 
-## Interpreter 
+## Interpreter
 
 The main role of the interpreter is to execute the parsed commands. In the diagram, you can see the execution of a binary operation.
 
