@@ -74,6 +74,12 @@ class MyTestCase(unittest.TestCase):
     def test_printed_note(self):
         self.assertEqual(basic.run('<testing>', "##printed note")[0], "[94mprinted note[0m")  # colorful note
 
+    def test_higher_order(self):
+        self.assertEqual(str(basic.run('<testing>', "$multiply$ (x) => x*x")[0]),
+                         str(Function("multiply", None, None)))
+        self.assertEqual(basic.run('<testing>', "[ x : $ square $(y) => x + @ multiply { y } ] (4)(5)")[0].value,
+                         29)
+
     def test_errors(self):
         self.assertEqual(basic.run('<testing>', "2+")[1].details, "Expected int or float or boolean or string")
         self.assertEqual(basic.run('<testing>', "(3+5")[1].details, "Expected ')'")
