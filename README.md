@@ -1,14 +1,9 @@
-# Interpreter [![Cult Of Martians][cult-img]][cult]
+# Interpreter
 
-<img src="https://ai.github.io/size-limit/logo.svg" align="right"
-     alt="Size Limit logo by Anton Lovchikov" width="120" height="178">
+-----Explain:
 
-Size Limit is a performance budget tool for JavaScript. It checks every commit
-on CI, calculates the real cost of your JS for end-users and throws an error
-if the cost exceeds the limit.
-
-* **ES modules** and **tree-shaking** support.
-* Add Size Limit to **GitHub Actions**, **Circle CI** or another CI system
+* **BNF** and **tree-shaking** support.
+* Add Size Limit to **How to run**, **Circle CI** or another CI system
   to know if a pull request adds a massive dependency.
 * **Modular** to fit different use cases: big JS applications
   that use their own bundler or small npm libraries with many files.
@@ -19,7 +14,11 @@ if the cost exceeds the limit.
   used in your JS.
 
 <p align="center">
-  <img src="./img/example.png" alt="Size Limit CLI" width="738">
+  <img src="./assets/Picture1.png" alt="Size Limit CLI" width="300" height="396">
+</p>
+
+<p align="center">
+  <img src="./assets/Picture2.png" alt="Size Limit CLI" width="500" height="350">
 </p>
 
 With **[GitHub action]** Size Limit will post bundle size changes as a comment
@@ -53,7 +52,7 @@ We are using [Statoscope] for this analysis.
 
 ## Who Uses Size Limit
 
-* [MobX](https://github.com/mobxjs/mobx)
+* [How to run](#how-to-run)
 * [Material-UI](https://github.com/callemall/material-ui)
 * [Ant Design](https://github.com/ant-design/ant-design/)
 * [Autoprefixer](https://github.com/postcss/autoprefixer)
@@ -69,6 +68,20 @@ We are using [Statoscope] for this analysis.
   [32% of the size](https://github.com/theKashey/react-focus-lock/pull/48).
 * [Logux](https://github.com/logux) reduced
   [90% of the size](https://github.com/logux/logux-client/commit/62b258e20e1818b23ae39b9c4cd49e2495781e91).
+
+## Title
+
+### Place 1
+
+Hello, this is some text to fill in this, [here](#place-2), is a link to the second place.
+
+### Place 2
+
+Place one has the fun times of linking here, but I can also link back [here](#place-1).
+
+### Place's 3: other example
+
+Place one has the fun times of linking here, but I can also link back [here](#places-3-other-example).
 
 
 ## How It Works
@@ -100,7 +113,8 @@ directly to a client (without publishing it to npm). Think of a user-facing app
 or website, like an email client, a CRM, a landing page or a blog with
 interactive elements, using React/Vue/Svelte lib or vanilla JS.
 
-<details><summary><b>Show instructions - How to RUN</b></summary>
+### How to run
+<details><summary><b>Show instructions </b></summary>
 
 1. To run the interpreter run in the terminal:
 
@@ -151,37 +165,89 @@ interactive elements, using React/Vue/Svelte lib or vanilla JS.
 </details>
 
 
-### JS Application and Time-based Limit
+### BNF
 
-File size limit (in kB) is not the best way to describe your JS application
-cost for developers. Developers will compare the size of the JS bundle
-with the size of images. But browsers need much more time to parse 100 kB
-of JS than 100 kB of an image since JS compilers are very complex.
-
-This is why Size Limit support time-based limit. It runs headless Chrome
-to track the time a browser takes to compile and execute your JS.
-
-<details><summary><b>Show instructions</b></summary>
-
-1. Install the preset:
-
-    ```sh
-    npm install --save-dev size-limit @size-limit/preset-app
-    ```
+<details><summary><b>Show BNF</b></summary>
 
 2. Add the `size-limit` section and the `size` script to your `package.json`:
 
-    ```diff
-    + "size-limit": [
-    +   {
-    +     "path": "dist/app-*.js"
-    +   }
-    + ],
-      "scripts": {
-        "build": "webpack ./webpack.config.js",
-    +   "size": "npm run build && size-limit",
-        "test": "vitest && eslint ."
-      }
+    ```
+    <language_command> ::= <func_def> | <call_func> | <comment> | <printed_note> | <lambda> | <comp_expression> | <TT_EXIT>
+    <func_def> ::= <TT_FUNC> <func_name> <TT_FUNC> <args> <TT_FUNC_SIGN> <language_command>
+    <call_func> ::= <TT_CALL_FUNC> <func_name> <nested_func>+ | <TT_CALL_FUNC> <func_name> <nested_func>+
+    <arg_value> ::= <arg_value> <TT_COMMA> <atom> | <atom>
+    <nested_func> ::= <TT_FUNC_LBRACKET> <arg_value> <TT_FUNC_RBRACKET> | <TT_FUNC_LBRACKET>  <TT_FUNC_RBRACKET>
+    <atom> ::= <INT> | <TT_STRING> | <bool>
+   
+    <comment> ::= <TT_COMMENT> <text>*
+    <text> ::= <TT_STRING> | <INT> | <TT_STRING> <text> | <INT> <text>
+    <printed_note> ::= <TT_PRINTED_NOTE> <text>*
+    <lambda> ::= <TT_LLAMBDA> <arg_name> <TT_LAMBDA_SIGN> <language_command> <TT_RLAMBDA> <nested_args>+
+    <nested_args> ::= <TT_LPAREN> <arg_value> <TT_RPAREN> | <TT_LPAREN> <TT_RPAREN>
+    
+    <comp_expression> ::= <TT_NOT> <comp_expression> | <second_expression> <AND_OR> <second_expression> | <second_expression>
+    <second_expression> ::= <first_expression> <BOOL_OPS> <first_expression> | <first_expression> | <second_expression> <BOOL_OPS> <second_expression>
+    <first_expression> ::= <factor> <PLUS_MINUS> <factor> | <factor> | <first_expression> <PLUS_MINUS> <first_expression>
+    <factor> ::= <INT> | <bool> | <TT_STRING> | <lambda> | <TT_LPAREN> <comp_expression> <TT_RPAREN> | <factor> <MUL_DIV_MOD> <factor> | <call_func> | <lambda>
+    
+    <TT_FUNC> ::=  <whitespace>* "$"  <whitespace>*
+    <func_name> ::=  <whitespace>* <TT_STRING>  <whitespace>*
+    <TT_LPAREN> ::=  <whitespace>* "("  <whitespace>*
+    <TT_RPAREN> ::=  <whitespace>* ")"  <whitespace>*
+    <args> ::= <TT_LPAREN> <arg_name> <TT_RPAREN> |  <TT_LPAREN> <TT_RPAREN>
+    <arg_name> ::= <TT_STRING> <TT_COMMA> <TT_STRING> | <TT_STRING>
+    <TT_FUNC_SIGN> ::=  <whitespace>* "=>"  <whitespace>*
+    
+    <TT_LLAMBDA> ::= <whitespace>* "[" <whitespace>*
+    <TT_RLAMBDA> ::= <whitespace>* "]" <whitespace>*
+    <TT_LAMBDA_SIGN> ::= <whitespace>* ":" <whitespace>*
+    
+    
+    <TT_CALL_FUNC> ::= <whitespace>* "@" <whitespace>*
+    <TT_FUNC_LBRACKET> ::= <whitespace>* "{" <whitespace>*
+    <TT_FUNC_RBRACKET> ::= <whitespace>* "}" <whitespace>*
+    
+    <AND_OR> ::= <TT_AND> | <TT_OR>
+    <TT_AND> ::= <whitespace>* "&&" <whitespace>*
+    <TT_OR> ::= <whitespace>* "||" <whitespace>*
+    <TT_STRING> ::= <whitespace>* <letters> <whitespace>*
+    <letters> ::= <small_letter> <TT_STRING> | <large_letter> <TT_STRING> | <small_letter> | <large_letter>
+    <small_letter> ::= [a-z]+
+    <large_letter> ::= [A-Z]+
+    
+    <TRUE> ::= <whitespace>* "True" <whitespace>*
+    <FALSE> ::= <whitespace>* "False" <whitespace>*
+    <bool> ::= <TRUE> | <FALSE>
+    <TT_COMMA> ::= <whitespace>* "," <whitespace>*
+    <TT_NOT> ::= <whitespace>* "!" <whitespace>*
+    <TT_COMMENT> ::= <whitespace>* "#"
+    <TT_PRINTED_NOTE> ::= <whitespace>* "##"
+    <TT_EXIT> ::= <whitespace>* "EXIT" <whitespace>*
+    <INT> ::= "-" <INT> | <number> | <float>
+    <float> ::= <number> "." <number>
+    <number> ::= <non_digit_zero> <digits>*
+    <digits> ::= <zero> | <non_digit_zero>
+    <non_digit_zero> ::= [1-9]+
+    <zero> ::= "0"
+    
+    <PLUS_MINUS> ::= <TT_PLUS> | <TT_MINUS>
+    <TT_PLUS> ::=  <whitespace>* "+"  <whitespace>*
+    <TT_MINUS> ::=  <whitespace>* "-"  <whitespace>*
+    
+    <MUL_DIV_MOD> ::= <TT_MUL> | <TT_DIV> | <TT_MODULO>
+    <TT_MUL> ::=  <whitespace>* "*"  <whitespace>*
+    <TT_DIV> ::=  <whitespace>* "/"  <whitespace>*
+    <TT_MODULO> ::=  <whitespace>* "%"  <whitespace>*
+    
+    <BOOL_OPS> ::= <EE> | <NE> | <GT> | <GTE> | <LT> | <LTE>
+    <EE> ::= <whitespace>* "==" <whitespace>*
+    <NE> ::= <whitespace>* "!=" <whitespace>*
+    <GT> ::= <whitespace>* ">" <whitespace>*
+    <LT> ::= <whitespace>* "<" <whitespace>*
+    <GTE> ::= <whitespace>* ">=" <whitespace>*
+    <LTE> ::= <whitespace>* "<=" <whitespace>*
+    
+    <whitespace> ::= " " | "\t"
     ```
 
 3. Here’s how you can get the size for your current project:
