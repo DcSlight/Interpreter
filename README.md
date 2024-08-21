@@ -10,9 +10,10 @@
 * [How to run](#how-to-run)
 * [Basic Commands](#basic-commands---cheatsheet)
 * [BNF](#bnf)
-* [Use can Diagram - interpreter](#use-case-diagram---interpreter)
-* [System - Diagram](#system).
+* [Use can Diagram - interpreter](#use-case-diagram)
+* [System](#system)
 * [Parser](#parser-)
+* [Interpreter](#interpreter).
  
 
 ### How To Run
@@ -137,8 +138,12 @@ Here is our BNF, a formal notation used to define the syntax of our programming 
 </details>
 
 
-### Use Case Diagram - Interpreter
+### Use Case Diagram
+In this diagram, you can see the entire system's functionality. The system starts with basic commands provided by the user. After the user sends an input:
 
+1. The lexer tokenizes the data.
+2. The parser checks its validity.
+3. The interpreter executes the command.
 <p align="center">
   <img src="./assets/use_case_diagram.png" alt="Size Limit CLI">
 </p>
@@ -150,6 +155,16 @@ Here is our BNF, a formal notation used to define the syntax of our programming 
 
 ### Parser 
 
+The primary role of the parser is to validate commands. A valid command is one that can be converted into an AST (Abstract Syntax Tree). In this diagram, you can see an AST of a FuncDefNode.
+
 <p align="center">
   <img src="./assets/parser.png" alt="Size Limit CLI" >
+</p>
+
+### Interpreter
+
+The main role of the interpreter is to execute the parsed commands. In the diagram, you can see the execution of a binary operation.
+
+<p align="center">
+  <img src="./assets/interpreter.png" alt="Size Limit CLI" >
 </p>
