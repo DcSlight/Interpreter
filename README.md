@@ -1,4 +1,4 @@
-# Interpreter
+# Interpreter - Programming Language
 
 ### Students
 
@@ -13,7 +13,7 @@
 * [Use can Diagram - interpreter](#use-case-diagram)
 * [System](#system)
 * [Parser](#parser-)
-* [Interpreter](#interpreter).
+* [Interpreter](#interpreter-)
  
 
 ## How To Run
@@ -161,7 +161,7 @@ The primary role of the parser is to validate commands. A valid command is one t
   <img src="./assets/parser.png" alt="Size Limit CLI" height="350">
 </p>
 
-## Interpreter
+## Interpreter 
 
 The main role of the interpreter is to execute the parsed commands. In the diagram, you can see the execution of a binary operation.
 
