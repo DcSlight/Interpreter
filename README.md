@@ -1,4 +1,4 @@
-# Size Limit [![Cult Of Martians][cult-img]][cult]
+# Interpreter [![Cult Of Martians][cult-img]][cult]
 
 <img src="https://ai.github.io/size-limit/logo.svg" align="right"
      alt="Size Limit logo by Anton Lovchikov" width="120" height="178">
@@ -93,34 +93,25 @@ We are using [Statoscope] for this analysis.
 
 ## Usage
 
-### JS Applications
+### Python Application
 
 Suitable for applications that have their own bundler and send the JS bundle
 directly to a client (without publishing it to npm). Think of a user-facing app
 or website, like an email client, a CRM, a landing page or a blog with
 interactive elements, using React/Vue/Svelte lib or vanilla JS.
 
-<details><summary><b>Show instructions</b></summary>
+<details><summary><b>Show instructions - How to RUN</b></summary>
 
-1. Install the preset:
+1. To run the interpreter run in the terminal:
 
     ```sh
-    npm install --save-dev size-limit @size-limit/file
+    python shell.py
     ```
 
-2. Add the `size-limit` section and the `size` script to your `package.json`:
+2. To run the interpreter with the example run in the terminal:
 
-    ```diff
-    + "size-limit": [
-    +   {
-    +     "path": "dist/app-*.js"
-    +   }
-    + ],
-      "scripts": {
-        "build": "webpack ./webpack.config.js",
-    +   "size": "npm run build && size-limit",
-        "test": "vitest && eslint ."
-      }
+    ```sh
+     python shell.py ExampleTest.lambda
     ```
 
 3. Here’s how you can get the size for your current project:
